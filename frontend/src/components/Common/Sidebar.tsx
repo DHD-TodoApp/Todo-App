@@ -1,32 +1,31 @@
 import {
   Box,
-  Flex,
-  Text,
-  Image,
   Drawer,
-  IconButton,
   DrawerBody,
+  DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
-  DrawerCloseButton,
+  Flex,
+  IconButton,
+  Image,
+  Text,
   useColorModeValue,
   useDisclosure,
-} from '@chakra-ui/react';
-import { FcTodoList } from 'react-icons/fc';
-import { FiLogOut, FiMenu } from 'react-icons/fi';
-import { useQueryClient } from '@tanstack/react-query';
+} from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { FiLogOut, FiMenu } from "react-icons/fi";
 
-import useAuth from '../../hooks/useAuth';
-import SidebarItems from './SidebarItems';
-import type { UserPublic } from '../../client';
-import Logo from '/assets/images/fastapi-logo.svg';
+import Logo from "/assets/images/checklist.png";
+import type { UserPublic } from "../../client";
+import useAuth from "../../hooks/useAuth";
+import SidebarItems from "./SidebarItems";
 
 const Sidebar = () => {
   const queryClient = useQueryClient();
-  const bgColor = useColorModeValue('ui.light', 'ui.dark');
-  const textColor = useColorModeValue('ui.dark', 'ui.light');
-  const secBgColor = useColorModeValue('ui.secondary', 'ui.darkSlate');
-  const currentUser = queryClient.getQueryData<UserPublic>(['currentUser']);
+  const bgColor = useColorModeValue("ui.light", "ui.dark");
+  const textColor = useColorModeValue("ui.dark", "ui.light");
+  const secBgColor = useColorModeValue("ui.secondary", "ui.darkSlate");
+  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { logout } = useAuth();
 
@@ -39,7 +38,7 @@ const Sidebar = () => {
       {/* Mobile */}
       <IconButton
         onClick={onOpen}
-        display={{ base: 'flex', md: 'none' }}
+        display={{ base: "flex", md: "none" }}
         aria-label="Open Menu"
         position="absolute"
         fontSize="20px"
@@ -55,14 +54,7 @@ const Sidebar = () => {
               <Box>
                 <Image src={Logo} alt="logo" p={6} />
                 <SidebarItems onClose={onClose} />
-                <Flex
-                  as="button"
-                  onClick={handleLogout}
-                  p={2}
-                  color="ui.danger"
-                  fontWeight="bold"
-                  alignItems="center"
-                >
+                <Flex as="button" onClick={handleLogout} p={2} color="ui.danger" fontWeight="bold" alignItems="center">
                   <FiLogOut />
                   <Text ml={2}>Log out</Text>
                 </Flex>
@@ -78,36 +70,14 @@ const Sidebar = () => {
       </Drawer>
 
       {/* Desktop */}
-      <Box
-        bg={bgColor}
-        p={3}
-        h="100vh"
-        position="sticky"
-        top="0"
-        display={{ base: 'none', md: 'flex' }}
-      >
-        <Flex
-          flexDir="column"
-          justify="space-between"
-          bg={secBgColor}
-          p={4}
-          borderRadius={12}
-        >
+      <Box bg={bgColor} p={3} h="100vh" position="sticky" top="0" display={{ base: "none", md: "flex" }}>
+        <Flex flexDir="column" justify="space-between" bg={secBgColor} p={4} borderRadius={12}>
           <Box>
-            <Box display="flex" alignItems="center" gap={4} py={4}>
-              <FcTodoList size="48px" />
-              <Text fontSize="2xl">Todo App</Text>
-            </Box>
+            <Image src={Logo} alt="Logo" w="180px" maxW="2xs" p={6} />
             <SidebarItems />
           </Box>
           {currentUser?.email && (
-            <Text
-              color={textColor}
-              noOfLines={2}
-              fontSize="sm"
-              p={2}
-              maxW="180px"
-            >
+            <Text color={textColor} noOfLines={2} fontSize="sm" p={2} maxW="180px">
               Logged in as: {currentUser.email}
             </Text>
           )}

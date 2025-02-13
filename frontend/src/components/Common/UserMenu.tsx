@@ -1,16 +1,8 @@
-import {
-  Box,
-  Menu,
-  Avatar,
-  MenuItem,
-  MenuList,
-  IconButton,
-  MenuButton,
-} from '@chakra-ui/react';
-import { Link } from '@tanstack/react-router';
-import { FiLogOut, FiUser } from 'react-icons/fi';
+import { Box, Menu, Avatar, MenuItem, MenuList, IconButton, MenuButton } from "@chakra-ui/react";
+import { Link } from "@tanstack/react-router";
+import { FiLogOut, FiUser } from "react-icons/fi";
 
-import useAuth from '../../hooks/useAuth';
+import useAuth from "../../hooks/useAuth";
 
 const UserMenu = () => {
   const { logout, user } = useAuth();
@@ -22,12 +14,7 @@ const UserMenu = () => {
   return (
     <>
       {/* Desktop */}
-      <Box
-        display={{ base: 'none', md: 'block' }}
-        position="fixed"
-        top={4}
-        right={4}
-      >
+      <Box display={{ base: "none", md: "block" }} position="fixed" top={4} right={4}>
         <Menu>
           <MenuButton
             as={IconButton}
@@ -41,12 +28,7 @@ const UserMenu = () => {
             <MenuItem icon={<FiUser fontSize="18px" />} as={Link} to="settings">
               My profile
             </MenuItem>
-            <MenuItem
-              icon={<FiLogOut fontSize="18px" />}
-              onClick={handleLogout}
-              color="ui.danger"
-              fontWeight="bold"
-            >
+            <MenuItem icon={<FiLogOut fontSize="18px" />} onClick={handleLogout} color="ui.danger" fontWeight="bold">
               Log out
             </MenuItem>
           </MenuList>
