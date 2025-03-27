@@ -1,4 +1,4 @@
-# FastAPI Project - Frontend
+# Todo - Frontend
 
 The frontend is built with [Vite](https://vitejs.dev/), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [TanStack Query](https://tanstack.com/query), [TanStack Router](https://tanstack.com/router) and [Chakra UI](https://chakra-ui.com/).
 
@@ -61,7 +61,6 @@ If you are developing an API-only app and want to remove the frontend, you can d
 
 * In the `docker-compose.override.yml` file, remove the whole service / section `frontend`.
 
-Done, you have a frontend-less (api-only) app. 🤓
 
 ---
 
@@ -154,7 +153,5 @@ To stop and remove the Docker Compose stack and clean the data created in tests,
 ```bash
 docker compose down -v
 ```
-
-To update the tests, navigate to the tests directory and modify the existing test files or add new ones as needed.
 
 For more information on writing and running Playwright tests, refer to the official [Playwright documentation](https://playwright.dev/docs/intro).
