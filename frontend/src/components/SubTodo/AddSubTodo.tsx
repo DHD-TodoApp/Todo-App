@@ -18,7 +18,7 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import {
   type ApiError,
   type SubTodoCreate,
-  SubTodosService,
+  SubtodosService,
 } from '../../client';
 import useCustomToast from '../../hooks/useCustomToast';
 import { handleError } from '../../utils';
@@ -48,7 +48,7 @@ const AddSubTodo = ({ isOpen, onClose, todoId }: AddSubTodoProps) => {
 
   const mutation = useMutation({
     mutationFn: (data: SubTodoCreate) =>
-      SubTodosService.createSubTodo({ requestBody: data, todo_id: todoId }),
+      SubtodosService.createSubtodo({ requestBody: data, todoId: todoId }),
     onSuccess: () => {
       showToast('Success!', 'Sub task is created successfully.', 'success');
       reset();
@@ -63,7 +63,7 @@ const AddSubTodo = ({ isOpen, onClose, todoId }: AddSubTodoProps) => {
   });
 
   const onSubmit: SubmitHandler<SubTodoCreate> = (data) => {
-    mutation.mutate({ ...data, todo_id: todoId });
+    mutation.mutate(data);
   };
 
   return (

@@ -10,7 +10,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { SubTodosService, TodosService, UsersService } from '../../client';
+import { SubtodosService, TodosService, UsersService } from '../../client';
 import useCustomToast from '../../hooks/useCustomToast';
 
 interface DeleteProps {
@@ -38,12 +38,12 @@ const Delete = ({ type, id, todoId, isOpen, onClose }: DeleteProps) => {
     todoId?: string;
   }) => {
     if (type === 'Todo') {
-      await TodosService.deleteTodo({ id: id });
+      await TodosService.deleteItem({ id: id });
     } else if (type === 'SubTodo') {
       if (!todoId) {
         throw new Error('Id of Todo is required to delete a SubTodo');
       }
-      await SubTodosService.deleteSubTodo({ todo_id: todoId, id: id });
+      await SubtodosService.deleteSubtodo({ todoId: todoId, id: id });
     } else if (type === 'User') {
       await UsersService.deleteUser({ userId: id });
     } else {
@@ -70,7 +70,7 @@ const Delete = ({ type, id, todoId, isOpen, onClose }: DeleteProps) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [type === 'Todo' ? 'todos' : 'users'],
+        queryKey: [type === 'Todo' ? 'todos' : type === 'SubTodo' ? 'subtodos' : 'users'],
       });
     },
   });
