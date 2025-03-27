@@ -20,7 +20,6 @@
 - 🔑 JWT (JSON Web Token) authentication.
 - 📫 Email based password recovery.
 - ✅ Tests with [Pytest](https://pytest.org).
-- 📞 [Traefik](https://traefik.io) as a reverse proxy / load balancer.
 - 🚢 Deployment instructions using Docker Compose, including how to set up a frontend Traefik proxy to handle automatic HTTPS certificates.
 - 🏭 CI (continuous integration) and CD (continuous deployment) based on GitHub Actions.
 
