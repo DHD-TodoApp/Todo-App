@@ -1,11 +1,11 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException
 from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Todo, TodoCreate, TodoPublic, TodosPublic, TodoUpdate, Message, SubTodo, SubTodosPublic
+from app.models import Todo, TodoCreate, TodoPublic, TodosPublic, TodoUpdate, Message
 
 router = APIRouter(prefix="/todos", tags=["todos"])
 
@@ -24,27 +24,30 @@ def read_todos(
         statement = select(Todo).offset(skip).limit(limit)
         todos = session.exec(statement).all()
     else:
-        count_statement = (
-            select(func.count())
-            .select_from(Todo)
-            .where(Todo.owner_id == current_user.id)
-        )
+        # Get all todos for the current user
         statement = (
             select(Todo)
             .where(Todo.owner_id == current_user.id)
-            .order_by(Todo.created_at.desc())
+            # Use created_at for ordering, not desc() which is a different attribute
+            .order_by(Todo.created_at.desc())  # type: ignore
         )
-        if search:
-            statement = statement.where(Todo.title.contains(search) | Todo.desc.contains(search) | Todo.status.contains(search))
-            count_statement = (
-                select(func.count())
-                .select_from(Todo)
-                .where(Todo.owner_id == current_user.id)
-                .where(Todo.title.contains(search) | Todo.desc.contains(search) | Todo.status.contains(search))
-            )
-        count = session.exec(count_statement).one()
-        statement = statement.offset(skip).limit(limit)
-        todos = session.exec(statement).all()
+        all_todos = session.exec(statement).all()
+        # Filter in Python if search is provided
+        if search and search.strip():
+            filtered_todos: list[Todo] = []
+            for todo in all_todos:
+                # Check if the search term is in title, description, or status
+                if (search.lower() in todo.title.lower() or
+                    (todo.desc and search.lower() in todo.desc.lower()) or
+                    search.lower() in todo.status.lower()):
+                    filtered_todos.append(todo)
+            count = len(filtered_todos)
+            # Apply pagination
+            todos = filtered_todos[skip:skip+limit]
+        else:
+            count = len(all_todos)
+            # Apply pagination
+            todos = all_todos[skip:skip+limit]
     return TodosPublic(data=todos, count=count)
 
 
@@ -64,7 +67,7 @@ def read_todo(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> 
 @router.post("/", response_model=TodoPublic)
 def create_todo(
     *, session: SessionDep, current_user: CurrentUser, todo_in: TodoCreate
-) -> TodoPublic:
+) -> Any:
     """
     Create new todo.
     """
