@@ -6,10 +6,17 @@ from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.models import (
-    Message, SubTodo, SubTodoCreate, SubTodoPublic, SubTodosPublic, SubTodoUpdate, Todo
+    Message,
+    SubTodo,
+    SubTodoCreate,
+    SubTodoPublic,
+    SubTodosPublic,
+    SubTodoUpdate,
+    Todo,
 )
 
 router = APIRouter(prefix="/todos/{todo_id}/subtodos", tags=["subtodos"])
+
 
 def validate_todo_access(
     session: SessionDep, current_user: CurrentUser, todo_id: uuid.UUID
@@ -22,27 +29,26 @@ def validate_todo_access(
         raise HTTPException(status_code=400, detail="Not enough permissions")
     return todo
 
+
 @router.get("/", response_model=SubTodosPublic)
 def read_subtodos(
     session: SessionDep,
     current_user: CurrentUser,
     todo_id: uuid.UUID,
     skip: int = 0,
-    limit: int = 100
+    limit: int = 100,
 ) -> Any:
     """Retrieve subtodos for a specific todo."""
     # Validate todo access
     validate_todo_access(session, current_user, todo_id)
     # Get subtodos
     statement = (
-        select(SubTodo)
-        .where(SubTodo.todo_id == todo_id)
-        .offset(skip)
-        .limit(limit)
+        select(SubTodo).where(SubTodo.todo_id == todo_id).offset(skip).limit(limit)
     )
     subtodos = session.exec(statement).all()
     count = len(subtodos)
     return SubTodosPublic(data=subtodos, count=count)
+
 
 @router.post("/", response_model=SubTodoPublic)
 def create_subtodo(
@@ -50,7 +56,7 @@ def create_subtodo(
     session: SessionDep,
     current_user: CurrentUser,
     todo_id: uuid.UUID,
-    subtodo_in: SubTodoCreate
+    subtodo_in: SubTodoCreate,
 ) -> Any:
     """Create a new subtodo for a specific todo."""
     # Validate todo access
@@ -60,7 +66,7 @@ def create_subtodo(
         title=subtodo_in.title,
         desc=subtodo_in.desc,
         todo_id=todo_id,
-        status="in_progress"
+        status="in_progress",
     )
     session.add(subtodo)
     session.commit()
@@ -73,15 +79,13 @@ def create_subtodo(
         created_at=subtodo.created_at,
         updated_at=subtodo.updated_at,
         todo_id=subtodo.todo_id,
-        status=subtodo.status
+        status=subtodo.status,
     )
+
 
 @router.get("/{id}", response_model=SubTodoPublic)
 def read_subtodo(
-    session: SessionDep,
-    current_user: CurrentUser,
-    todo_id: uuid.UUID,
-    id: uuid.UUID
+    session: SessionDep, current_user: CurrentUser, todo_id: uuid.UUID, id: uuid.UUID
 ) -> Any:
     """Get a specific subtodo."""
     # Validate todo access
@@ -91,8 +95,11 @@ def read_subtodo(
     if not subtodo:
         raise HTTPException(status_code=404, detail="Subtodo not found")
     if subtodo.todo_id != todo_id:
-        raise HTTPException(status_code=400, detail="Subtodo does not belong to this todo")
+        raise HTTPException(
+            status_code=400, detail="Subtodo does not belong to this todo"
+        )
     return subtodo
+
 
 @router.put("/{id}", response_model=SubTodoPublic)
 def update_subtodo(
@@ -101,7 +108,7 @@ def update_subtodo(
     current_user: CurrentUser,
     todo_id: uuid.UUID,
     id: uuid.UUID,
-    subtodo_in: SubTodoUpdate
+    subtodo_in: SubTodoUpdate,
 ) -> Any:
     """Update a subtodo."""
     # Validate todo access
@@ -111,7 +118,9 @@ def update_subtodo(
     if not subtodo:
         raise HTTPException(status_code=404, detail="Subtodo not found")
     if subtodo.todo_id != todo_id:
-        raise HTTPException(status_code=400, detail="Subtodo does not belong to this todo")
+        raise HTTPException(
+            status_code=400, detail="Subtodo does not belong to this todo"
+        )
     # Update subtodo
     update_dict = subtodo_in.model_dump(exclude_unset=True)
     subtodo.sqlmodel_update(update_dict)
@@ -120,12 +129,10 @@ def update_subtodo(
     session.refresh(subtodo)
     return subtodo
 
+
 @router.delete("/{id}")
 def delete_subtodo(
-    session: SessionDep,
-    current_user: CurrentUser,
-    todo_id: uuid.UUID,
-    id: uuid.UUID
+    session: SessionDep, current_user: CurrentUser, todo_id: uuid.UUID, id: uuid.UUID
 ) -> Message:
     """Delete a subtodo."""
     # Validate todo access
@@ -135,7 +142,9 @@ def delete_subtodo(
     if not subtodo:
         raise HTTPException(status_code=404, detail="Subtodo not found")
     if subtodo.todo_id != todo_id:
-        raise HTTPException(status_code=400, detail="Subtodo does not belong to this todo")
+        raise HTTPException(
+            status_code=400, detail="Subtodo does not belong to this todo"
+        )
     # Delete subtodo
     session.delete(subtodo)
     session.commit()

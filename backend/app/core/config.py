@@ -69,7 +69,7 @@ class Settings(BaseSettings):
                 host=self.POSTGRES_SERVER,
                 port=self.POSTGRES_PORT,
                 path=self.POSTGRES_DB,
-            )
+            ),
         )
 
     SMTP_TLS: bool = True

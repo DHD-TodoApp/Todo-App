@@ -5,14 +5,18 @@ from fastapi import APIRouter, HTTPException
 from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Todo, TodoCreate, TodoPublic, TodosPublic, TodoUpdate, Message
+from app.models import Message, Todo, TodoCreate, TodoPublic, TodosPublic, TodoUpdate
 
 router = APIRouter(prefix="/todos", tags=["todos"])
 
 
 @router.get("/", response_model=TodosPublic)
 def read_todos(
-    session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100, search: str | None = None
+    session: SessionDep,
+    current_user: CurrentUser,
+    skip: int = 0,
+    limit: int = 100,
+    search: str | None = None,
 ) -> Any:
     """
     Retrieve todos.
@@ -37,17 +41,19 @@ def read_todos(
             filtered_todos: list[Todo] = []
             for todo in all_todos:
                 # Check if the search term is in title, description, or status
-                if (search.lower() in todo.title.lower() or
-                    (todo.desc and search.lower() in todo.desc.lower()) or
-                    search.lower() in todo.status.lower()):
+                if (
+                    search.lower() in todo.title.lower()
+                    or (todo.desc and search.lower() in todo.desc.lower())
+                    or search.lower() in todo.status.lower()
+                ):
                     filtered_todos.append(todo)
             count = len(filtered_todos)
             # Apply pagination
-            todos = filtered_todos[skip:skip+limit]
+            todos = filtered_todos[skip : skip + limit]
         else:
             count = len(all_todos)
             # Apply pagination
-            todos = all_todos[skip:skip+limit]
+            todos = all_todos[skip : skip + limit]
     return TodosPublic(data=todos, count=count)
 
 
@@ -62,6 +68,7 @@ def read_todo(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> 
     if not current_user.is_superuser and (todo.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     return todo
+
 
 # CurrentUser to authenticat ->middleware
 @router.post("/", response_model=TodoPublic)
@@ -117,4 +124,3 @@ def delete_item(
     session.delete(todo)
     session.commit()
     return Message(message="Task deleted successfully")
-
