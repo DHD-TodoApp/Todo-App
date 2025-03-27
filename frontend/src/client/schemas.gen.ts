@@ -162,37 +162,37 @@ export const TodoUpdateSchema = {
 export const TodosPublicSchema = {
   properties: {
     title: {
-      type: 'string',
+      type: "string",
       maxLength: 255,
       minLength: 1,
-      title: 'Title',
+      title: "Title",
     },
     desc: {
-      type: ['string', 'null'],
+      type: ["string", "null"],
       maxLength: 255,
-      title: 'Description',
+      title: "Description",
     },
     id: {
-      type: 'string',
-      format: 'uuid',
-      title: 'Id',
+      type: "string",
+      format: "uuid",
+      title: "Id",
     },
     owner_id: {
-      type: 'string',
-      format: 'uuid',
-      title: 'Owner Id',
+      type: "string",
+      format: "uuid",
+      title: "Owner Id",
     },
     status: {
-      type: 'string',
-      enum: ['pending', 'completed', 'in_progress'],
-      default: 'in_progress',
-      title: 'Status',
+      type: "string",
+      enum: ["pending", "completed", "in_progress"],
+      default: "in_progress",
+      title: "Status",
     },
   },
-  type: 'object',
-  required: ['title', 'id', 'owner_id'],
-  title: 'SubTodoPublic',
-} as const;
+  type: "object",
+  required: ["title", "id", "owner_id"],
+  title: "SubTodoPublic",
+} as const
 
 export const SubTodoCreateSchema = {
   properties: {
@@ -227,67 +227,67 @@ export const SubTodoCreateSchema = {
 export const SubTodoPublicSchema = {
   properties: {
     title: {
-      type: 'string',
+      type: "string",
       maxLength: 255,
       minLength: 1,
-      title: 'Title',
+      title: "Title",
     },
     desc: {
-      type: ['string', 'null'],
+      type: ["string", "null"],
       maxLength: 255,
-      title: 'Description',
+      title: "Description",
     },
     id: {
-      type: 'string',
-      format: 'uuid',
-      title: 'Id',
+      type: "string",
+      format: "uuid",
+      title: "Id",
     },
     todo_id: {
-      type: 'string',
-      format: 'uuid',
-      title: 'Todo Id',
+      type: "string",
+      format: "uuid",
+      title: "Todo Id",
     },
     status: {
-      type: 'string',
-      enum: ['pending', 'completed', 'in_progress'],
-      default: 'in_progress',
-      title: 'Status',
+      type: "string",
+      enum: ["pending", "completed", "in_progress"],
+      default: "in_progress",
+      title: "Status",
     },
   },
-  type: 'object',
-  required: ['title', 'id', 'todo_id'],
-  title: 'SubTodoPublic',
-};
+  type: "object",
+  required: ["title", "id", "todo_id"],
+  title: "SubTodoPublic",
+}
 
 export const SubTodoUpdateSchema = {
   properties: {
     title: {
       anyOf: [
         {
-          type: 'string',
+          type: "string",
           maxLength: 255,
           minLength: 1,
         },
         {
-          type: 'null',
+          type: "null",
         },
       ],
-      title: 'Title',
+      title: "Title",
     },
     desc: {
-      type: ['string', 'null'],
+      type: ["string", "null"],
       maxLength: 255,
-      title: 'Description',
+      title: "Description",
     },
     status: {
-      type: ['string', 'null'],
-      enum: ['pending', 'completed', 'in_progress'],
-      title: 'Status',
+      type: ["string", "null"],
+      enum: ["pending", "completed", "in_progress"],
+      title: "Status",
     },
   },
-  type: 'object',
-  title: 'SubTodoUpdate',
-};
+  type: "object",
+  title: "SubTodoUpdate",
+}
 
 export const MessageSchema = {
   properties: {
