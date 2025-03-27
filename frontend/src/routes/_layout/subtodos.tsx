@@ -16,7 +16,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { z } from 'zod';
 
-import { SubTodosService } from '../../client/index.ts';
+import { SubtodosService } from '../../client/index.ts';
 // import ActionsMenu from '../../components/Common/ActionsMenu.tsx';
 import Navbar from '../../components/Common/Navbar.tsx';
 import AddSubItem from '../../components/SubTodo/AddSubTodo.tsx';
@@ -36,12 +36,12 @@ const PER_PAGE = 5;
 function getSubTodosQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      SubTodosService.readSubTodos({
-        todo_id: '',
+      SubtodosService.readSubtodos({
+        todoId: '',
         skip: (page - 1) * PER_PAGE,
         limit: PER_PAGE,
       }),
-    queryKey: ['todos', { page }],
+    queryKey: ['subtodos', { page }],
   };
 }
 
@@ -88,15 +88,15 @@ function SubTodosTable() {
       });
 
       // Call API to persist changes
-      await SubTodosService.updateSubTodo({
+      await SubtodosService.updateSubtodo({
         id: todoId,
         requestBody: { status: newStatus },
-        todo_id: '',
+        todoId: '',
       });
 
       // Optionally refresh data after successful update
       queryClient.invalidateQueries({
-        queryKey: ['todos'],
+        queryKey: ['subtodos'],
         exact: true,
         refetchType: 'active',
       });
@@ -130,7 +130,7 @@ function SubTodosTable() {
             </Tbody>
           ) : (
             <Tbody>
-              {items?.data.map((todo) => (
+              {items?.data.map((todo: any) => (
                 <Tr key={todo.id} opacity={isPlaceholderData ? 0.5 : 1}>
                   <Td>{todo.id}</Td>
                   <Td isTruncated maxWidth="150px">
