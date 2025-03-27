@@ -37,6 +37,7 @@ function getSubTodosQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
       SubTodosService.readSubTodos({
+        todo_id: '',
         skip: (page - 1) * PER_PAGE,
         limit: PER_PAGE,
       }),
@@ -90,6 +91,7 @@ function SubTodosTable() {
       await SubTodosService.updateSubTodo({
         id: todoId,
         requestBody: { status: newStatus },
+        todo_id: '',
       });
 
       // Optionally refresh data after successful update
@@ -192,7 +194,7 @@ function SubTodos() {
         Sub ToDo List Management
       </Heading>
 
-      <Navbar type={'subtodo'} addModalAs={AddSubItem} />
+      <Navbar type={'subtodo'} addModalAs={AddSubItem} onSearch={() => {}} search={""} />
       <SubTodosTable />
     </Container>
   );

@@ -25,7 +25,15 @@ jobs:
           version: "0.4.15"
           enable-cache: true
       - run: docker compose down -v --remove-orphans
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: app
       - run: docker compose up -d db mailcatcher
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: app
       - name: Migrate DB
         run: uv run bash scripts/prestart.sh
         working-directory: backend
