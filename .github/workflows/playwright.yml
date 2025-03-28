@@ -11,24 +11,22 @@ on:
   workflow_dispatch:
     inputs:
       debug_enabled:
-        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        description: 'Run the build with tmate debugging enabled'
         required: false
         default: 'false'
 
 jobs:
   changes:
     runs-on: ubuntu-latest
-    # Set job outputs to values from filter step
     outputs:
-      changed: ${{ steps.filter.outputs.changed }}
+      changed: ${{ steps.filter.outputs.any }}
     steps:
     - uses: actions/checkout@v4
-    # For pull requests it's not necessary to checkout the code but for the main branch it is
     - uses: dorny/paths-filter@v3
       id: filter
       with:
         filters: |
-          changed:
+          any:
             - backend/**
             - frontend/**
             - .env
@@ -38,7 +36,7 @@ jobs:
   test-playwright:
     needs:
       - changes
-    if: ${{ needs.changes.outputs.changed == 'true' }}
+    if: ${{ needs.changes.outputs.any == 'true' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     strategy:
@@ -90,7 +88,7 @@ jobs:
       - test-playwright
       - changes
     # Merge reports after playwright-tests, even if some shards have failed
-    if: ${{ !cancelled() && needs.changes.outputs.changed == 'true' }}
+    if: ${{ !cancelled() && needs.changes.outputs.any == 'true' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4

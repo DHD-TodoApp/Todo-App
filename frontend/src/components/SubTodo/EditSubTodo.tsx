@@ -19,7 +19,7 @@ import {
   type ApiError,
   type SubTodoPublic,
   type SubTodoUpdate,
-  SubTodosService,
+  SubtodosService,
 } from '../../client';
 import { handleError } from '../../utils';
 import useCustomToast from '../../hooks/useCustomToast';
@@ -46,9 +46,9 @@ const EditSubTodo = ({ subtodo, isOpen, onClose }: EditSubTodoProps) => {
 
   const mutation = useMutation({
     mutationFn: (data: SubTodoUpdate) =>
-      SubTodosService.updateSubTodo({
+      SubtodosService.updateSubtodo({
         id: subtodo.id,
-        todo_id: subtodo.todo_id,
+        todoId: subtodo.todo_id,
         requestBody: data,
       }),
     onSuccess: () => {
@@ -68,7 +68,7 @@ const EditSubTodo = ({ subtodo, isOpen, onClose }: EditSubTodoProps) => {
           ),
         };
       });
-      queryClient.invalidateQueries({ queryKey: ['todo_id'] });
+      queryClient.invalidateQueries({ queryKey: ['subtodos'] });
     },
   });
 

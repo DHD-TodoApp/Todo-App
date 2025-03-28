@@ -33,7 +33,7 @@ import EditSubTodo from '../../components/SubTodo/EditSubTodo.tsx';
 import { PaginationFooter } from '../../components/Common/PaginationFooter.tsx';
 
 import { SubTodoPublic } from '../../client/index.ts';
-import { TodosService, SubTodosService } from '../../client/index.ts';
+import { TodosService, SubtodosService } from '../../client/index.ts';
 
 export const Route = createFileRoute('/_layout/todos')({
   component: Todos,
@@ -55,7 +55,7 @@ const getTodosQueryOptions = ({ page }: { page: number }) => {
 
 const getSubTodosQueryOptions = (todo_id: string) => {
   return {
-    queryFn: () => SubTodosService.getSubTodoByTodoId({ todo_id }),
+    queryFn: () => SubtodosService.readSubtodos({ todoId: todo_id }),
     queryKey: ['subtodos', todo_id],
     enabled: !!todo_id,
   };
@@ -166,9 +166,9 @@ function TodosTable({ searchQuery }: { searchQuery: string }) {
         };
       });
 
-      await SubTodosService.updateSubTodo({
+      await SubtodosService.updateSubtodo({
         id: subTodoId,
-        todo_id: todoId,
+        todoId: todoId,
         requestBody: { status: newStatus },
       });
       refetch();
@@ -320,7 +320,7 @@ function TodosTable({ searchQuery }: { searchQuery: string }) {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {subtodos.data.map((subtodo) => (
+                    {subtodos.data.map((subtodo: any) => (
                       <Tr key={subtodo.id}>
                         <Td>{subtodo.id}</Td>
                         <Td>{subtodo.title}</Td>
