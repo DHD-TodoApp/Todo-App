@@ -54,6 +54,7 @@ def read_todos(
             count = len(all_todos)
             # Apply pagination
             todos = all_todos[skip : skip + limit]
+    print(todos)
     return TodosPublic(data=todos, count=count)
 
 
