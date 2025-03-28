@@ -59,7 +59,7 @@ jobs:
           
       - name: Build and Deploy
         run: |
-          docker compose up --project-name ${STACK_NAME} build || (docker system prune -af && docker compose up --project-name ${STACK_NAME} build)
+          docker compose --project-name ${STACK_NAME} build || (docker system prune -af && docker compose --project-name ${STACK_NAME} build)
           docker compose --project-name ${STACK_NAME} up -d
         env:
           STACK_NAME: ${{ secrets.STACK_NAME_STAGING }}
