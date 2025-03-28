@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, Optional
+from typing import Any
 
 from sqlmodel import Session, select
 
@@ -31,8 +31,10 @@ def update_user(*, session: Session, db_user: User, user_in: UserUpdate) -> Any:
     return db_user
 
 
-def get_user_by_email(session: Session, email: str) -> Optional[User]:
-    return session.query(User).filter(User.email == email).first()
+def get_user_by_email(*, session: Session, email: str) -> User | None:
+    statement = select(User).where(User.email == email)
+    session_user = session.exec(statement).first()
+    return session_user
 
 
 def authenticate(*, session: Session, email: str, password: str) -> User | None:
