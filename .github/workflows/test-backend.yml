@@ -16,11 +16,11 @@ jobs:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: app
-      POSTGRES_SERVER: db
+      POSTGRES_SERVER: localhost
       POSTGRES_PORT: 5432
-      PROJECT_NAME: fastapi
+      PROJECT_NAME: To Do Project Demo CICD
       FIRST_SUPERUSER: admin@gmail.com
-      FIRST_SUPERUSER_PASSWORD: admin
+      FIRST_SUPERUSER_PASSWORD: admin123
       SMTP_TLS: True
       SMTP_PORT: 587
       SMTP_HOST: smtp.gmail.com
@@ -63,8 +63,14 @@ jobs:
       - name: Start Database
         run: |
           docker compose up -d db
+          echo "Checking Docker network..."
+          docker network ls
+          docker compose ps
           echo "Waiting for PostgreSQL to be ready..."
-          sleep 15
+          until docker exec $(docker compose ps -q db) pg_isready -h localhost -p 5432; do
+            echo "Waiting for database connection..."
+            sleep 2
+          done
           
       - name: Start mailcatcher
         run: docker compose up -d mailcatcher
