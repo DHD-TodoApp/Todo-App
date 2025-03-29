@@ -68,6 +68,7 @@ def read_todo(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> 
         raise HTTPException(status_code=404, detail="Task not found")
     if not current_user.is_superuser and (todo.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
+    print(todo)
     return todo
 
 
